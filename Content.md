@@ -1,19 +1,8 @@
-Number. Build script 
-Youtube
-
-1. web/jsf/RequestScopeBean.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-2. web/jsf/SessionScopeBean.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-3. web/jsf/Resources.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-4. web/jsf/Html5.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-5. web/jsf/Ajax.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-6. web/jsf/HttpGet.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-7. web/jsf/FlowScope.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
-8. web/jsf/Websocket.txt
-https://www.youtube.com/watch?v=R1sqYTiVs0I
+## Java-EE-8-tutorial-examples-comment-and-rebuild
+### Content
+1. Java EE Tutorial web/jsf/Hello1
+- [RequestScopeBean build script](web/jsf/RequestScopeBean.md)
+- [RequestScopeBean Youtube](https://www.youtube.com/watch?v=R1sqYTiVs0I)
+2. Java EE Tutorial web/jsf/guessnumber-jsf
+- [RequestScopeBean build script](web/jsf/SessionScopeBean.md)
+- [RequestScopeBean Youtube](https://www.youtube.com/watch?v=R1sqYTiVs0I)
