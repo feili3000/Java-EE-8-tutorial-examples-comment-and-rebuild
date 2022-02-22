@@ -1,4 +1,4 @@
-Most people learn Java EE programming from Java EE tutorial examples, me too. Now I want to dig deeper into them, one by one. I will make some analysis, comments, fix some bugs, and rebuild them.
+Most people learn Java EE programming from Java EE tutorial examples, me too. Now I want to dig deeper into them, one by one. I will make some analysis, comments, fix some bugs, make some suggestions and rebuild them.
 
 I will not provide any runnable projects, whatever NetBeans or Eclipse. Instead I provide the rebuild script and YouTube video. You can watch my YouTube video and rebuild by following the script step by step, copy/paste.
 
