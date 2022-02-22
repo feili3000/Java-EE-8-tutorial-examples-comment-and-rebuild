@@ -1,7 +1,4 @@
-Format:
-Number. Build script 
-Youtube
-
+  
 - 8.. [Websocket build script](web/jsf/Websocket.txt)  
 [YouTube](https://www.youtube.com/watch?v=R1sqYTiVs0I)
 - 7.. [Flow Scope build script](web/jsf/FlowScope.txt)  
