@@ -3,3 +3,22 @@
 
 HTML has 2 kinds of requests: get or post. The get request will put all call stuff into a url, and post call will put target "response" in the html request header and page parameters into the html request body. You can see every detail from the url if the call is "get", but you can see nothing if the call is "post". Java EE Web default request format is post, so you can see nothing. 
 
+private Integer userNumber = null;
+    String response = null;
+
+    public void setUserNumber(Integer user_number) {
+        userNumber = user_number;
+    }
+
+    public Integer getUserNumber() {
+        return userNumber;
+    }
+
+    public String getResponse() {
+        if ((userNumber == null) || (userNumber.compareTo(userSessionBean.getRandomInt()) != 0)) {
+            return "Sorry, " + userNumber + " is incorrect.";
+        } else {
+            return "Yay! You got it!";
+        }
+    }
+
