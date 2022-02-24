@@ -1,0 +1,5 @@
+
+14. A request of a Web application can have 2 formats: HTTP Get and HTTP Post. A Get request puts the request path, file name, and parameters all in a URL,  we can see such URL, we can bookmark it. A Post request puts every request component in a request body which is invisible, and now the URL is meaningless. Our http://localhost:8080/hello1_c/ is a Get request, click [Submit] will be a Post request, click [Back] is also a Post request.
+
+HTML has 2 kinds of requests: get or post. The get request will put all call stuff into a url, and post call will put target "response" in the html request header and page parameters into the html request body. You can see every detail from the url if the call is "get", but you can see nothing if the call is "post". Java EE Web default request format is post, so you can see nothing. 
+
