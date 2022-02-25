@@ -24,11 +24,10 @@
 [Save]. Notice that I put a field globalOnly="true" to it, if you do not put this one, h:inputText error message will show up twice.
 14. We encountered #{userNumberBean.xxx}, so we know it asks the server to create a managed bean named "userNumberBean". So, we open UserNumberBean.java by expanding +Source Packages, +javaeetutorial.guessnumber.
 13. The first new thing is @SessionScoped. This is a session bean and it implements Serializable, this is a must according to Java EE specification. The server never tries to serialize a request scope bean, so do not put "implements Serializable" there. A session starts from a user's first visit to the application guessnumber-jsf_c, and can end in many ways, typically timeout, logout and so on. The session bean will stay alive for the whole session, including all requests in the session. If the user has no visit for a while or the server's memory is too full, the server can choose to serialize it to a disk, if the user visits again, the server will deserialize it from the disk to the memory.
-13.1 The session bean will store and should only store session scope data, the maximum and minimum are session scope, but userNumber and response vary from request to request, so they are request scope. We need to create a new request scope bean.
+13.1 The easiest way to write an application is to use one session bean for all pages, you do not need to worry about how to do navigation among the pages. But it will change Internet HTTP fundamentals from stateless to stateful because all the states are in that session bean. In practice people will keep the session bean as small as possible.  We will keep the data: maximum, minimum and randomInt in the session bean, and create a new request scope bean to hold user guessed number and response string.
 13.2 Right click UserNumberBean.java, go to [Refactor], [Rename...].  New Name: is UserSessionBean,  Click [Refactor].
-13.3 Netbeans has a stuck problem sometimes here. If you got there, do the following: slowly click on a file name, one, two, three, till the system allows you to edit it, enter a new name, [Enter] key. [Refactor].
-13.2 Right click javaeetutorial.guessnumber under Source Packages. Go to [New], [Others]. Select [JavaServer Faces] and [JSF CDI Bean]. Click [Next].  Class Name: is UserNumberBean and Scope: is request. Click[Finish].
-13.3 Through a little bit of thinking, we know that randomInt, maximum and minimum are session scope data; userNumber and response are request scope data.
+13.3 Netbeans has a stuck problem sometimes here. If you get stuck, do the following: slowly click on a file name, one, two, three, till the system allows you to edit the name, enter a new name, [Enter] key. [Refactor].
+13.2 Right click javaeetutorial.guessnumber under Source Packages. Go to [New], [Others]. Select [JavaServer Faces] and [JSF CDI Bean]. Click [Next].  Class Name: is UserNumberBean and the scope is the request. Click[Finish].
 13.4 delete all code from UserSessionBean.java and UserNumberBean.java, make them an empty class.
 13.5 Add the following code to UserSessionBean.java:
     Integer randomInt = null;
@@ -62,15 +61,51 @@
             return "Yay! You got it!";
         }
     }
+13.8 There is a red error message on "userSessionBean". We want to call userSessionBean.getRandomInt(), but how to get the userSessionBean instance? All session beans are created and stored in the server JNDI database before any request scope call. The way to get a reference of the session bean is through so called CDI injection, like this:
 
+    @Inject
+    UserSessionBean userSessionBean;
 
+insert the above code into the top of the UserNumberBean class. right click, [Fix Import...]. We will talk about CDI in detail later on.
+13.9 We need to modify greeting.xhtml: userNumberBean.minimum to userSessionBean.minimum and userNumberBean.maximum to userSessionBean.maximum.
+14. Now let's test the project. [Save], [Clean and Build], [Run].
+14.1 Enter 20, [submit]. You will see awful error messages. Let's insert validatorMessage for [h:inputText ... ]Place the mouse cursor before ], press [Ctrl] + space key, v key, and choose validatorMessage, enter this: "The value should be between #{userSessionBean.minimum} and #{userSessionBean.maximum}."  Click save icon on Netbeans toolbar, and click [Confirm] in the browser popup window. test it with 20 again, See, nice clean error message.
+15. Go back to the greeting page and enter abc, [Submit]. The error message is still not clear. We need to put converterMessage into h:inputText, enter this:  "The value should be integer between #{userSessionBean.minimum} and #{userSessionBean.maximum}.".  [Save], [Continue], You should see your change.
+16. Delete anything in inputText Textbox and [Submit], surprice! It passed validation and passed to the response page. Not good!. add these 2 fields to h:inputText:
+required="true" requiredMessage="Error: A number is required."
+[Save], [Confirm], you should see the validation carried on correctly.
+17. Open response.xhtml, change stylesheet link as: [h:outputStylesheet name="css/default.css"/], change h:graphicImage value to: "resources/images/wave.med.gif". Delete id="result" and id="back" because no stylesheet or Javascript linked to them.
+18. The code is working now, but there is a big performance problem, let me show you. Put the following code into UserNumberBean.java:
 
+    static int globalBeanID = 0;
+    int localBeanID = globalBeanID;
 
-13.3 Modify UserSessionBean like this. Put the cursor at bottom, Right click -] [Insert Code...], select [Getter and Setter...]Check randomInt, and click [Generate].
-13.4 Modify UserNumberBean like this. We want to call userSessionBean.getRandomInt(), but how to get the userSessionBean instance? All session beans are created and stored in the server JNDI database before any request scope call. So how can a request scope bean get a session bean instance? Type @Inject. click the red ball and add import... Enter UserSessionBean userSessionBean. This is called CDI and we will talk about it in detail later on.
-13.5 We need to modify greeting.xhtml: userNumberBean.minimum to userSessionBean.minimum and userNumberBean.maximum to userSessionBean.maximum.
-14. Now let's test the project. [Clean and Build], [Run].
-14.1 Enter 20, [submit]. You will see awful error messages. Let's insert validatorMessage for [h:inputText ... ]Place the mouse cursor before ], press [Ctrl] + space key, and choose validatorMessage, enter anything you feel good, like "The value should be between #{userNumberBean.minimum} and #{userNumberBean.maximum}."  test it. See, nice clean error message.
-15. Go back to the greeting page and enter abc, [Submit]. The error message is still not clear. We need to put converterMessage into h:inputText, choose any words you feel good. My choice could be  "The value should be integer between #{userNumberBean.minimum} and #{userNumberBean.maximum}.".  Click save icon on Netbeans toolbar, and click [Confirm] in the browser popup window. You should see your change.
-16. Delete anything in inputText Textbox and [Submit], surprice! It passed validation and passed to the response page. Not good!. Go to project hello1_c, open index.xhtml, and copy these 2 fields: required and requiredMessage, change message to "Error: A value is required." Save, Confirm, you should see the validation carried on correctly.
-17. Open response.xhtml, change stylesheet link as: [h:outputStylesheet name="resources/css/default.css"/], change h:graphicImage value to: "resources/images/wave.med.gif". Delete id="result" and id="back" because no stylesheet or Javascript linked to them.
+    public UserNumberBean() {
+        globalBeanID++;
+        localBeanID = globalBeanID;
+        System.out.println("UserNumberBean ................................................." + globalBeanID + " created.");
+    }
+
+    @Override
+    public void finalize() {
+        System.out.println("UserNumberBean .......................................... " + localBeanID + " destroyed.");
+    }
+[Save], [Clear and Build], [Run].
+19. Wait for 1-2 minutes, you can see from the server created and destroyed the UserNumberBean; enter 20, [submit], wait for a while, You will see another UserNumberBean created and destroyed; enter abc, [Submit], wait for a while, You will see another UserNumberBean created and destroyed; leave input empty, [Submit], wait for a while, You will see another UserNumberBean created and destroyed; The server waste a lot of computing power to do such creation/destroy. The request scope is very bad for a page with a lot of server validations. We need to change it to a view scope.
+20. Open UserNumberBean.java, change @RequestScoped to @ViewScoped, add
+import javax.faces.view.ViewScoped;
+The @ViewScoped can live for multiple request/response, so you need add
+implements Serializable
+to the class.
+21. [Save], [Clear and Build], [Run]. Now you repeat the above test and will find there is only one UserNumberBean created. Good.
+22. At the end, enter 5, [Submit], The page navigated to response.xhtml, but the response string is missing. After we change from session bean to request or view bean, naturally we need to deal with the issue of passing parameters among the page navigation. The easiest way to pass the parameters between 2 pages is to use JSF flash, change SetUserNumber like this:
+    public void setUserNumber(Integer user_number) {
+        userNumber = user_number;
+        FacesContext.getCurrentInstance().getExternalContext().getFlash()
+                .put("result", getResponse());
+   
+    }
+Here when the commandButton submits the form, we put the response string into the flash.
+ 23. Open response.xhtml, change #{userNumberBean.response} to #{flash['result']}.
+24. Open greeting.xhtml, change the commandButton's action from "response" to "response?faces-redirect=true".
+35. We are done. [Save], [Clear and Build], [Run].
