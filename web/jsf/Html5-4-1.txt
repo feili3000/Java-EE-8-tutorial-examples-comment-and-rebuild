@@ -1,29 +1,111 @@
-1. Let's go to the next example, which is reservation. In the project panel, Expend +Java EE Tutorial -> +Modules -> +web -> +jsf, right click < reservation> project,  choose <Open Project>.
-2. Open menu File -> New Project... Select Java with Maven and Web Application. Click <Next>. Make Project name: reservation_c, and Project Location: C:\Programming\javaee8\myexamples\web\jsf, click <Next>. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click <Finish>
-3. If the project name is not reservation_c, right click on it, and choose Rename... Make the Display name as reservation_c. Click <OK>
+1. Let's go to the next example, which is reservation. In the project panel, Expend +[Java EE Tutorial],  +[Modules], +[web], +[jsf], right click [ reservation] project, choose [Open Project].
+2. Open menu [File], [New Project...], select [Java with Maven] and [Web Application], click [Next], make Project name: reservation_c, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish].
+3. If the project name is not reservation_c, right click on it, and choose Rename... Make the Display name as reservation_c. Click [OK ]
 4. If you find beans.xml under Web Pages\WEB-INF, delete it. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
 5. Right click on project reservation_c, and choose Properties.
 5.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
-5.2 Click Frameworks in the left panel, click the <Add...> button in the right panel. Choose <JavaServer Faces> from the list.
-5.3 Click Compile in the left panel, choose <JDK 1.8> as Java Platform:.
-5.4 Click Run in the left panel, confirm <GlassFish 5.1.0> is the Server, and <Java EE 8 Web> is the Java EE Version. Click the <OK> button to close the properties window.
-6. Double click web.xml under WebPages -> WEB-INF, change /faces/* to *.xhtml, and faces/index.xhtml to index.xhtml. This will make the request call url simpler. Also change 30 minutes to 300 for the session timeout, so the page will stay there long enough for us to talk about it in detail.
-9. Copy reservation project to reservation_c.
-9.1 delete all web pages from reservation_c, copy resources folder, reservation.xhtml and confirmation.xhtml from reservation Web Pages to  reservation_c  Web Pages. copy javaeetutorial.reservation folder from Source Packages of reservation to reservation_c.
-9.2 Open web.xml again and change the welcome page to reservation.xhtml.
-10. Open reservation.xhtml. Copy line <h:outputStylesheet name="css/stylesheet.css" target="head"/> from <h:body> to <h:head>. Delete target="head", make name="css/stylesheet.css.
-11. Do the same thing for confirmation.xhtml.
-12. Clean and Build>, <Run>.
-13. Open reservation.xhtml. Delete prependId="false" from h:form. The default value for prependId is true. prependId="true" is to tell the html code generator to put the form id in front of any element id of the form. If there is no form id, the generator will generate an internal one. prependId="false" tells the generator not to put the form id in front of the element id of the form. Without a form id as a prefix, the id has become globalized. if you use it everywhere, you will easily get an id duplicated error. The error location can be the whole application scope and therefore, hard to be found. So, prependId="false" is not good to me and I never use it. After prependId="false" is deleted, we have to check Javascript and Stylesheet to see if there is an element id of the form used. In this case we do find a Javascript code uses an element id of the form. Scroll down to the bottom of the file, you will find document.getElementById('email'), and the "email" is defined by <h:form> ... <input type="email" jsf:id="email"... ./> ... </h:form>. This is a broken code now, because now the real generated id will have an internal generated form id prefix. Not only we need to check Javascript but also the Stylesheet file. If there is an #email section, it will be broken too. The solution is to put your own form id and use it in Javascript and Stylesheet. So, we change <h:form> to <h:form id="form1">, and change document.getElementById('email') to document.getElementById('form1:email'). Open stylesheet.css file, add a section at the bottom like this.
-<save>, <Clean and Build> and <Run>.
-so now we really changed the code. Add id="form1" to h:form. Scroll down to the bottom and find document.getElementById('email'), change it to: document.getElementById('form1:email'). Not only we need to look at Javascript but also the Stylesheet file. Suppose there is a #email {...}
-section in stylesheet.css file, we need to change it to #form1:email, because : is css special letter, we need to escape it like this:  #form1\:email. The better way to do it is to replace id css to class css, add styleClass="email" into <input type="email" jsf:id="email"... styleClass="email", and change #email {...} section in stylesheet.css to .email {...}.
-14. html5 has more power than JSF in terms of presentation. It has many more tags JSF does not have. Even with a similar tag, html5 has more fields than JSF, for example, in reservation.xhtml, you can see the <input> tag has type "text", "email", "data", actually html <input> has a total of 20 types. In general, html5 also has more predefined fields,  like here in <h:inputText id="price"..., p:type="number" p:min="80" p:max="120" p:step="20". JSF does not define such fields. Even when html5 and JSF have the same field, it can have different values, for example, JSF say required="true/false", but html say required="required" or just remove the field.
-15. My first suggestion to you about html5 is "forget it for the time being!", surprise! why?, because of the bad integration between Java EE and html5. Whatever you use html5 tags or insert html5 field into JSF tags use p: prefix, there is no error check for you. Java EE does not have an integrated html5 compiler, so it does not know if your html5 stuff is valid or not, so it just pushes through as it is to the browser. The browser is a presentation platform, not your debug, so the browser does not care about your html5 error either. Let's create some errors in html5 to show you how bad it could be.
-16. Open ReservationBean.java and change name = ""; to name = "Fei Li";. Delete jsf: from <input type="text" jsf:id="full_name" ... We expect it will not read value from reservationBean.name and not write value to reservationBean.name. In <input type="email" jsf:id="email", suppose we put jsf: in front of a wrong field like this: <input jsf:type="email" id="email"... we expect some kind of error to happen here. in <h:inputText id="price"... we change p:min to p:min1, assume we have a typing error here, and expect the system to tell us there is an unexpected field.
-17. <save>, <Clean and Build> and <Run>. First surprise, even we forget the must prefix jsf: it still reads the name value from the bean. There is no error warning about our email tag and p:min1 field. Now we fill the whole form, change the name to "Mark", and click<Make Reservation>. Look at the confirmation page you will see. Our name "Mark" was lost, and the email was missing too. So many errors but no complaints at all. Can you accept such a software development environment? I cannot. I would skip html5 completely at the moment. If you use it, you need to be extremely careful, because nobody helps you, all risk is on your own.
-18. In reservation.xhtml, there are 3 places to use <f:ajax>. It is a Javascript library for you to use. If there is no Javascript code, we have to submit the whole form and download a whole new page to display. To save the Internet traffic and the server memory loading, the fine tuning applications use Javascript to do partial submit and partial page update.  <f:ajax> has 3 major fields: event, execute, listener and render. event tells when to trigger this Javascript, execute tell what to be submitted, listener tell which bean method to call, and renter tell which part in this page to be updated.
-19. The first <f:ajax> call is event="change", so when input text finishes and your cursor leaves the box, it is triggered. There is no execute for a single element because it implies this element value will be submitted. The bean method to call is reservationBean.calculateTotal(), it calculates a new total price from the new ticket number that just submitted. render="total" tells update display for the element with a id="total". Instead of submitting the whole form and updating the whole page, this <f:ajax> only submit one value and update one element, nice!, isn't it?
-20. The second <f:ajax> does the exact same thing for the unit price change. The third <f:ajax> embedded in the html tag instead of JSF tag. It has no event because <input type="submit"> has only one event i.e. "submit", there is no execution too because it will submit nothing. The listener calls the bean method reservationBean.clear(), and render="@all" means the whole page. Here if we use <Input type="reset">, it can clean all input fields, but cannot clean the output field <output jsf:id="total"...>.
-21. Open ReservationBean.java, you see @SessionScoped. This is not a session scope bean for sure, but if you change it to @RequestScoped, you will get a wired total price calculation. Why? Remember that we said in hello1_c project that after the server sends out the response of the request, the server will destroy the request scope bean immediately. It means that Just when the form shows up in the browser, the request scope bean is destroyed already. So when you change the ticket number from 1 to 2, the <f:ajax> will call reservationBean.calculateTotal(), but because the old bean is destroyed, the server will create a brand new request scope bean for you, and the price is initial value 120. You will get the correct total for this time. After the <f:ajax> method call finishes, the server destroys the bean again. Now if you change the price to 100,then you find the total is not 2 X 100 = 200, it is 1 X 100 = 100. What happened?  When you make the second price change <f:ajax> call, the server creates a brand new request scope bean again, the ticket number is the default value 1. So here we get 2 problems, stored value lost and the server wasted a lot of computing power to create and destroy beans. So if the request scope bean is not the solution too, what scope can we choose? The view scope bean starts when the request starts, it keeps in the server memory till the page changes. If you have <f:ajax> or Javascript call the bean, the bean least scope should be view scope.
-22. Change to @ViewScoped, <save>, <Clean and Build> and <Run>.
+5.2 Click Frameworks in the left panel, click the [Add... ] button in the right panel. Choose [JavaServer Faces ] from the list.
+5.3 Click Compile in the left panel, choose [JDK 1.8 ] as Java Platform:.
+5.4 Click Run in the left panel, confirm [GlassFish 5.1.0 ] is the Server, and [Java EE 8 Web ] is the Java EE Version. Click the [OK ] button to close the properties window.
+6. Double click web.xml under WebPages - ] WEB-INF, change /faces/* to *.xhtml, and faces/index.xhtml to index.xhtml. This will make the request call url simpler. Also change 30 minutes to 300 for the session timeout, so the page will stay there long enough for us to talk about it in detail.
+7. Copy reservation project to reservation_c.
+7.1 delete all web pages from reservation_c, copy resources folder, reservation.xhtml and confirmation.xhtml from reservation Web Pages to  reservation_c  Web Pages. copy javaeetutorial.reservation folder from Source Packages of reservation to reservation_c.
+7.2 Open web.xml again and change the welcome page to reservation.xhtml.
+8. Open reservation.xhtml. Move line <h:outputStylesheet name="css/stylesheet.css" target="head"/ > from <h:body> to <h:head>. Delete target="head".
+9. Do the same thing for confirmation.xhtml.
+10. [Save], [Clean and Build], [Run ]. Play around.
+11. To simplify the example, we will delete f:ajax from the example, and talk about f:ajax in detail for the next example. Open reservation.xhtml, delete 3 <f:ajax.../>, and delete the following:
+
+<p>
+    <label>Estimated Total:</label>
+    <br/>
+    <output jsf:id="total" name="total">
+        #{reservationBean.totalValue}
+    </output>
+</p>
+
+11.1 Open ReservationBean.java, delete:
+    private String totalValue = "120.00";
+and delete 2 methods: getTotalValue, setTotalValue, delete totalValue = String.valueOf(total) + ".00"; from calculateTotal method, delete totalValue = "120.00"; from clear method.
+
+11.2 Open confirmation.xhtml, delete:
+Your total amount is #{reservationBean.totalValue}.
+
+12. [Save], [Clean and Build], [Run ].
+13. Open reservation.xhtml. Delete prependId="false" from h:form. The default value for prependId is true. prependId="true" is to tell the html code generator to put the form id in front of any element id of the form. If there is no form id, the generator will generate an internal one. prependId="false" tells the generator not to put the form id in front of the element id of the form. Without a form id as a prefix, the id has become globalized. if you use it everywhere, you will easily get an id duplicated error. The error location can be the whole application scope and therefore, hard to be found. So, prependId="false" is not good to me and I never use it. After prependId="false" is deleted, we have to check Javascript and Stylesheet to see if there is an element id of the form used. In this case we do find a Javascript code uses an element id of the form. Scroll down to the bottom of the file, you will find document.getElementById('email'), and the "email" is defined by <input type="email" jsf:id="email"... ./ >. This is a broken code now, because now the real generated id will have an internal generated form id prefix. The solution is to put your own form id and use it in Javascript and Stylesheet. So, we change <h:form> to <h:form id="form1">, and change document.getElementById('email') to document.getElementById('form1:email').
+14. Not only we need to check Javascript but also the Stylesheet file. If there is an #email section, it will be broken too. What you can do is to change it to #form1:email, but because : is a css special letter, we need to escape it like this:  #form1\:email. The better way to do it is to replace id css to class css, add styleClass="email" into <input type="email" jsf:id="email"...>, and add the following section to resources/css/stylesheet.css:
+
+#form1\:email {
+    color: green;
+}
+
+.email {
+    color: blue;
+}
+
+15. [save ], [Clean and Build ] and [Run ].
+16. Let me show you a bug here. There is a Javascript function call in the input id="emailAgain". It checks if the two emails entering are the same. Scroll down to the bottom to find the function, add:
+alert(input.id);
+at the first line of the function.
+16.1, [Run] it, type a, b, c, d in the "Enter email again:" field, my goodness. Each letter triggers one call to the function. Obviously the chosen event is wrong. Suppose we choose a correct event, does it do the job? Not really. Delete alert(input.id); [Run] it again. Do this:
+A. enter aaa@aaa in the email field.
+B. enter the same in the email again field.
+Now you change your mind, and,
+C. enter bbb@bbb in the email field
+but forgot to match it in the email again field, fill the name and date fields, click [Make Reservation], the error escaped.
+17. The javascript function stays in the wrong place and calls at the wrong time. Let's fix the bug. Delete
+oninput="check(this)"
+from input "emailAgain" field, and add 
+onclick="check();"
+to the h:commandButton. change the function as:
+function check() {
+    var email = document.getElementById('form1:email');
+    var emailAgain = document.getElementById('form1:emailAgain');
+
+    if (email.value !== emailAgain .value) {
+        emailAgain.setCustomValidity('The two email addresses must match.');
+        return false;
+    }
+    else { // input is valid -- reset the error message
+        return true;
+    }
+}
+18. 12. [Save], [Clean and Build], [Run ].
+19. Next we want to test how good it is for html5 and JSF integration. We will introduce some errors to see how the system responds.
+19.1 Open ReservationBean.java and change name = ""; to name = "Fei Li";. Delete jsf: from <input type="text" jsf:id="full_name" .../>, We expect it will not read value from reservationBean.name and not write value to reservationBean.name.
+19.2 In <input type="email" jsf:id="email".../>, suppose we put jsf: in front of a wrong field like this: <input jsf:type="email" id="email".../> we expect some kind of error to happen here.
+19.3 in <h:inputText id="price".../> we change p:min to p:min1, assume we have a typing error here, and expect the system to tell us there is an unexpected field.
+20. [save ], [Clean and Build ] and [Run ].
+20.1 For 19.1, Even we forget the must prefix jsf: it still reads the name value from the bean.
+20.2 For 19.2, There is no error warning about our email tag. Now we fill the whole form, and click [Make Reservation ]. Surprise! We navigated to the response page, but our name was lost, and the email was missing too.
+20.3 For 19.3, There is no error warning about our p:min1 field, so the min price can be anything.
+21. Scary, right? Why so bad? Because whatever you use html5 tags or insert html5 field into JSF tags use p: prefix, there is no error check for you. The JSF simply pushes through as it is to the browser. The browser only does the validation at the field's request and does not care about other things at all. So using html5 is almost at your own risk.
+22. Now we come to a serious choice, do we prefer JSF tags, html5 pass-through or html5 tags? The answer may surprise you: use html5 as much as you can. There are 3 big benefits to using html5.
+22.1 html5 tags are defined at the client side, it is implemented in the browser. If you use them, the server does not need to load those classes/objects in the server, it just passes the tag text to the browser.
+22.2 html5 does a lot of validation work on the client side, so saves a lot of network traffic and server computing power.
+22.2 html5 has many more tags than JSF has. <video> for video, <svg> for vector data, <canvas> for free hand drawing, and so on. For the similar tags, html5 has more fields than JSF has, for example, html5 <input ] tag has type "text", "email", "data", actually html [input ] has a total of 20 types. In general, html5 also has more predefined fields,  like here in <h:inputText id="price"...>, p:step="20". JSF does not define such fields.
+23. Let's take advantage of html client side validation. Open ReservationBean.java, you see @SessionScoped. This should not be a session scope bean for sure. If it is a session bean, you cannot buy a second ticket because it will overwrite the first ticket. So we need to change it to a request scope or view scope. If we use the JSF tags we could not use the request scope bean as we explained in the example:
+http://
+but for html5 input, we can use a request scope bean, therefore, avoid a longer living scope bean. Open ReservationBean.java, change @SessionScoped to @RequestedScoped, delete implements Serializable. Add the following to the end of the class.
+
+    static int globalBeanID = 0;
+    int localBeanID = globalBeanID;
+
+    @PostConstruct
+    public void init() {
+        globalBeanID++;
+        localBeanID = globalBeanID;
+        System.out.println("ReservationBean ................................................." + globalBeanID + " created.");
+    }
+
+    @Override
+    public void finalize() {
+        System.out.println("ReservationBean .......................................... " + localBeanID + " destroyed.");
+    }
+[save ], [Clean and Build ] and [Run ].
+24. Look at [Output], [GlassFish Server 5.1.0] window, there is one request scope bean created. Wait for 1-2 minutes, the bean destroyed.
+24.1 Delete content from Name field, [Make Reservation], there is a validation error message, but no request bean created.
+24.2 Enter a name, leave the email field empty, [Make Reservation], there is a validation error message, but no request bean created.
+24.3 Enter aaa to the email field, [Make Reservation], there is a validation error message, but no request bean created.
+25. You can continue, so on and so on.
+26. html5 really saves a lot of server computing.
