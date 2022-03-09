@@ -1,29 +1,267 @@
-1. Let's go to the next example, which is bookmarks. In the project panel, Expend +Java EE Tutorial -> +Modules -> +web -> +jsf, right click <bookmarks> project,  choose <Open Project>.
-2. Open menu File -> New Project... Select Java with Maven and Web Application. Click <Next>. Make Project name: bookmarks_c, and Project Location: C:\Programming\javaee8\myexamples\web\jsf, click <Next>. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click <Finish>
-3. If the project name is not bookmarks_c, right click on it, and choose Rename... Make the Display name as bookmarks_c. Click <OK>
-4. If you find beans.xml under Web Pages\WEB-INF, delete it. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
-5. Right click on project bookmarks_c, and choose Properties.
-5.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
-5.2 Click Frameworks in the left panel, click the <Add...> button in the right panel. Choose <JavaServer Faces> from the list.
-5.3 Click Compile in the left panel, choose <JDK 1.8> as Java Platform:.
-5.4 Click Run in the left panel, confirm <GlassFish 5.1.0> is the Server, and <Java EE 8 Web> is the Java EE Version. Click the <OK> button to close the properties window.
-6. Double click web.xml under WebPages -> WEB-INF, change /faces/* to *.xhtml, and faces/index.xhtml to index.xhtml. This will make the request call url simpler. Also change 30 minutes to 300 for the session timeout, so the page will stay there long enough for us to talk about it in detail.
-9. Copy bookmarks project to bookmarks_c.
-9.1 Delete all pages from WebPages of bookmarks_c project.
-9.2 Copy all pages including the resources folder from Web Pages of bookmarks project to bookmarks_c.
-9.3 Copy all the Java source code from Source Packages of bookmarks project to bookmarks_c.
+1. The next example is the bookmarks. It is a small example talking about bookmarkable URLs when you make a HTTP call. We want to go more broadly about the topic. Talk about how to make JSF HTTP call and control the refresh and go back button of the browser.
+2. Let's make a new example, let's call it jsf-http-request.
+3. Open menu [File], [New Project...], Select [Java with Maven] and [Web Application]. Click [Next ]. Make Project name: jsf-http-request, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next ]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish ].
+4. If the project name is not jsf-http-request, right click on it, and choose [Rename...] Make the Display name as jsf-http-request. Click [OK ]
+5. If you find beans.xml under Web Pages\WEB-INF, delete it. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
+6. Right click on project jsf-http-request, and choose Properties.
+6.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
+6.2 Click Frameworks in the left panel, click the [Add... ] button in the right panel. Choose [JavaServer Faces ] from the list.
+6.3 Click Compile in the left panel, choose [JDK 1.8 ] as Java Platform:.
+6.4 Click Run in the left panel, confirm [GlassFish 5.1.0 ] is the Server, and [Java EE 8 Web ] is the Java EE Version. Click the [OK ] button to close the properties window.
+7. Double click web.xml under WebPages - ] WEB-INF, change /faces/* to *.xhtml, and faces/index.xhtml to index.xhtml. This will make the request call url simpler. Also change 30 minutes to 300 for the session timeout, so the page will stay there long enough for us to talk about it in detail.
+8. JSF has 5 navigation elements: link, outputLink, commandLink, button and commandButton. html5 has 2 elements: a and input. Whatever they are, at the end, they all make a HTTP request, in GET format or POST format. The get format puts everything in the url. For a post call, the url is not used, and everything is in the call's body. The main purpose for a get call is to retrieve a web page, and the post call is to submit a form. The get call is bokkamarkable and the post is not.
+9. Let's make an example to look at such calls. Create a new page for the call target. Right click to open [New], [jsf page], give it a name target. Open index.xhtml, mke it looks like:
 
-10. Open index.xhtml, change h:graphicImage url to "resources/images/duke.waving.gif". Delete id="username", id="submit", id="reset" and  class="messagecolor". They are useless.
-11. Open  response.xhtml, change h:graphicImage url to "resources/images/duke.waving.gif". Delete id="back". It is useless.
-12. Open personal.xhtml, change h:graphicImage url to "resources/images/duke.waving.gif".
-13. <Save>, <Clean and Build> and <Run>.
-14. Enter Fei as the name, <Submit>, click <personal greeting page!> link.
-15. <Ctrl>+c key to copy the url of the browser. Open a new tab of the browser, <Ctrl>+v key to paste the url, <Enter> key. You see another personal greeting page, which means you can bookmark the personal greeting page. This is all the purpose of this project.
-16. I am already explain this topic in previous example, I repeat it here. HTTP request has 2 types, get and post. It typically code like: <form mothod="get or post", action="next page">, if it is a get call, the browser not only show the next page, but also update page url. The url includs next page name and all parameters, like this:  http://localhost:8080/bookmarks_c/personal.xhtml?Result=Fei+Li. You can bookmark it for your later use. If it is a post call, the browser still shows up the next page, but not update the url, the url become useless and misleading. So it is not bookmarkable. The call page and parameters is in the request header and body, you cannot see it.
-17. JSF default call type is post. when your project comes to a point that you want to offer the user a bookmarkable url, you need to use h:link, see response.xhtml.
-18. You can take h:link out of <h:form> if you want. It works both inside or outside of a form. Delete includeViewParams="true" because it is useless here, later on I will show you how to use it.
-19. You can construct the url by your own without f:param, like this.
-20. If you have special html letters in your value of a param, you have to escape them, like this.
-21. Is there another way to make a bookmarkable url in JSF, yes, for example, h:commandButton action="nectpage?faces-redirect=true". faces-redirect=true tells the browser to use HTTP GET call.
-22. Open personal.xhtml, f:viewParam will find a page param Result, and put its value to hello.name.
-add a new h:link like this. Now includeViewParams="true" works. The link will not only have its own param Reason, but also includes the page param, in this case Result.
+<h:body>
+        <h2>JSF</h2>
+        <h3>Bookmarkable:</h3>
+        <p/>
+        <p/>
+        1. h:link outcome="target"<br/>
+        <h:link outcome="target" value="Go to target page" />
+        <p/>
+        Translated html:
+        <xmp><h:link outcome="target" value="Go to target page" /></xmp>
+        HTTP GET
+        <hr/>
+        2. h:outputLink value="target.xhtml"<br/>
+        <h:outputLink value="target.xhtml">Go to target page</h:outputLink>
+        <p/>
+        Translated html:
+        <xmp><h:outputLink value="target.xhtml">Go to target page</h:outputLink></xmp>
+        HTTP GET
+        <hr/>
+        3. h:button outcome="target"<br/>
+        <h:button outcome="target" value="Go to target page" />
+        <p/>
+        Translated html:
+        <xmp><h:button outcome="target" value="Go to target page" /></xmp>
+        HTTP GET
+        <hr/>
+        <p/>
+        <p/>
+        <h3>Not Bookmarkable:</h3>
+        <h:form>
+            4. h:commandLink action="target"<br/>
+            <h:commandLink value="Go to target page" action="target" />
+            <p/>
+            Translated html:
+            <xmp><h:commandLink value="Go to target page" action="target" /></xmp>
+            HTTP POST
+            <hr/>
+            5. h:commandButton action="target"<br/>
+            <h:commandButton value="Go to target page" action="target"/><p/>
+            <p/>
+            Translated html:
+            <xmp><h:commandButton value="Go to target page" action="target"/></xmp>
+            HTTP POST
+        </h:form>
+            <hr size="10" style="background:black"/>
+            <h2>html5</h2>
+            <h3>Bookmarkable:</h3>
+            <p/>
+            6. a jsf:value="target.xhtml"<br/>
+            <a jsf:value="target.xhtml">Go to target page</a>
+            <p/>
+            Translated html:
+            <xmp><a jsf:value="target.xhtml">Go to target page</a></xmp>
+            HTTP GET
+            <hr/>
+            7. a jsf:outcome="target"<br/>
+            <a jsf:outcome="target">Go to target page</a>
+            <p/>
+            Translated html:
+            <xmp><a jsf:outcome="target">Go to target page</a></xmp>
+            HTTP GET
+            <hr/>
+            8. button jsf:outcome="target"<br/>
+            <button jsf:outcome="target" >Go to target page</button>
+            <p/>
+            Translated html:
+            <xmp><button jsf:outcome="target">Go to target page</button></xmp>
+            HTTP GET
+            <p/>
+            <hr/>
+        <h:form>
+            9. a jsf:action="target"<br/>
+            <a jsf:action="target">Go to target page</a>
+            <p/>
+            Translated html:
+            <xmp><a jsf:action="target">Go to target page</a></xmp>
+            HTTP POST
+            <hr/>
+            10. input jsf:action="target"<br/>
+            <input type="submit" jsf:action="target" value="Go to target page"/>
+            <p/>
+            Translated html:
+            <xmp><input type="submit" jsf:action="target" value="Go to target page"/></xmp>
+            HTTP POST
+            <hr/>
+        </h:form>
+</h:body>
+
+10. We got 6 GETs which are bookmarkable, and 4 POSTs which are not bookmarkable. In general, people do not like POST because It is completely blind about the page and parameters. It can be very bad when a user clicks the [Reload] button from the browser. The browser will popup a window asking you if you want to resubmit, but it will not tell you resubmit what. Many people just choose [Continue] to resubmit the form again and in most cases it is not what people want. The programmer has no control over that button. Let's make a small application to see the problem.
+11. Create paybill.xhtml like this:
+    <h:body>
+        <h3>Pay bill</h3>
+        <h:form>
+            <input type="submit" value="Pay bill" jsf:action="#{paybillBean.paybill()}"/>
+        </h:form>
+    </h:body>
+11.1 Create notpaid.xhtml like this:
+        <h:body>
+        <h:form>
+            <h3>bill:</h3>
+            <input type="number" jsf:value="#{paybillBean.amount}"/>
+            <input type="submit" value="Submit" jsf:action="paid"/>
+        </h:form>
+    </h:body>
+11.2 Create paid.xhtml like this:
+    </h:head>
+    <h:body>
+        <h3>You paid $#{paybillBean.totalAmount}, thanks.</h3>
+        <button jsf:outcome="paybill">Go back to home page</button>
+    </h:body>
+11.3 Create PaybillBean like this:
+package view;
+
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
+import java.io.Serializable;
+
+@Named(value = "paybillBean")
+@SessionScoped
+public class PaybillBean implements Serializable {
+
+    static double totalAmount = 0.0;
+
+    double amount = 0.0;
+    boolean paid = false;
+
+    public PaybillBean() {
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+        paid = true;
+        processcreditCard();
+    }
+
+    public void processcreditCard() {
+        totalAmount += amount;
+        amount = 0.0;
+    }
+
+    public String paybill() {
+        if (paid ) {
+            return "paid";
+        }
+        else {
+            return "notpaid";
+        }
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        PaybillBean.totalAmount = totalAmount;
+    }
+}
+12. [Save], [Clean and Build], test without the browsers' [Reload] button, right click the file paybill.xhtml, [Run File], click button [Pay bill], type 100, [Submit], [Go back to home page], [Pay bill], the system said you have paid bill already. close this tab or window from your browser, re-run it with the browser's [Reload] button, [Run File], click button [Pay bill], type 100, [Submit], click [Reload], read the popup window, no idea what it means, click [Continue], see! you paid twice, if the page has no information about the current status, you could end up clicking the [Reload] button multiple times. To solve this problem, people created a design pattern called PRG (Post - Redirect - Get), let me show you what it is. Open nopaid.xhtml,
+change jsf:action="paid" to jsf:action="paid?faces-redirect=true".
+The former code submits the form and returns the paid page as the response of the post call.  The latter code submit the form and send a redirection instruction to the browser that it needs to call the page with a get format. Close the tab or window from your browser, [Run File], [Pay bill], type 100, [Submit], click [Reload], no popup window this, nothing happens, right? Actually it reloads the paid.xhtml instead of nopaid.xhtml. So in the future, if we do not want a post call resubmitted by the browser's [Reload], we can do PRG.
+13. The browser has another button that drives every web developer crazy. [Go back] button. The [Go back] button grabs the previous page from the cache and displays it. It is extremely bad if the previous page is a post call and should not be redo. Let's run the paybill application again.  right click the file paybill.xhtml, [Run File], click button [Pay bill], type 100, [Submit], [Go back], [Submit], [Go back], [Submit]... Nobody can stop you till your banks say you do not have enough money to pay the bill.
+14. People created tons of solutions for the [Go back] button crazy and no one works fine. The solutions can be classified as 2 categories. No cache or cheating cache.
+15. Let's see no cache solution. You can create a web filter through NetBeans' [Web], [Filter], but the generated code is too old and long-winded. Let's create our own. Create a class:
+
+package webfilter;
+
+import java.io.*;
+import javax.servlet.http.*;
+
+public class CharResponseWrapper extends HttpServletResponseWrapper {
+    private CharArrayWriter writer;
+
+    public CharResponseWrapper(HttpServletResponse response) {
+        super(response);
+        writer = new CharArrayWriter();
+    }
+
+    public PrintWriter getWriter() {
+        return new PrintWriter(writer);
+    }
+
+    public String toString() {
+        return writer.toString();
+    }
+
+}
+16. Create a filter like this:
+package webfilter;
+
+import java.io.*;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
+
+@WebFilter("/*")
+public class NoCacheWebFilter implements Filter {
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        CharResponseWrapper wrapper = new CharResponseWrapper((HttpServletResponse) response);
+
+        wrapper.setHeader("Cache-Control","no-cache,no-store,must-revalidate");
+        wrapper.setHeader("Pragma","no-cache");
+        wrapper.setDateHeader("Expires",0);
+
+        chain.doFilter(request, wrapper);
+        PrintWriter responseWriter = response.getWriter();
+
+        String originalContent = wrapper.toString();
+        responseWriter.write(originalContent);
+
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+}
+17. [Save], [Clean and Build], right click paybill.xhtml, [Run File], [Pay bill], enter 100, [Submit], now click the browser's [Go back] button, you got a [Confirm Form Resubmission] window, after read it, you click [Reload] button, you got another [Confirm Form Resubmission], and you [Continue], you end up the paid.xhtml page, not notpaid.xhtml page. No way you can make a mistake to repay. Good, but it is scary to  go through the procedure that you do not understand why. The second category solution is to cheat cache by hacking into browser's history and insert a page for the [Go back] button to use. The solution is so tricky that I do not want to use it.
+18. I have a perfect solution for the browser's [Go back] and [Reload] buttons. Instead of a full post we do ajax post. After the ajax post we stay on the same page but hide the ajax post part. Because ajax is a partial update, so the browser never caches it. In this way we can solve both [Reload] and [Go back] problems of the browser. Open notpaid.xhtml, change it like this:
+    <h:body>
+        <h:form>
+            <h:panelGroup rendered="#{!paybillBean.paid}">
+                <input type="number" jsf:value="#{paybillBean.amount}"/>
+                <input jsf:id="s1" type="submit" value="Submit">
+                    <f:ajax execute="@form" render="@form"/>
+                </input>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{paybillBean.paid}">
+                <h3>You paid $#{paybillBean.totalAmount}, thanks.</h3>
+                <button jsf:outcome="paybill">Go back to home page</button>
+            </h:panelGroup>
+        </h:form>
+    </h:body>
