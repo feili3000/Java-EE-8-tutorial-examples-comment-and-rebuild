@@ -82,7 +82,7 @@
             HTTP GET
             <p/>
             <hr/>
-        <h:form>
+        <form jsf:id="form1">
             9. a jsf:action="target"<br/>
             <a jsf:action="target">Go to target page</a>
             <p/>
@@ -97,24 +97,24 @@
             <xmp><input type="submit" jsf:action="target" value="Go to target page"/></xmp>
             HTTP POST
             <hr/>
-        </h:form>
+        </form>
 </h:body>
 
 10. We got 6 GETs which are bookmarkable, and 4 POSTs which are not bookmarkable. In general, people do not like POST because It is completely blind about the page and parameters. It can be very bad when a user clicks the [Reload] button from the browser. The browser will popup a window asking you if you want to resubmit, but it will not tell you resubmit what. Many people just choose [Continue] to resubmit the form again and in most cases it is not what people want. The programmer has no control over that button. Let's make a small application to see the problem.
 11. Create paybill.xhtml like this:
     <h:body>
         <h3>Pay bill</h3>
-        <h:form>
+        <form jsf:id="form1">
             <input type="submit" value="Pay bill" jsf:action="#{paybillBean.paybill()}"/>
-        </h:form>
+        </form>
     </h:body>
 11.1 Create notpaid.xhtml like this:
         <h:body>
-        <h:form>
+        <form jsf:id="form1">
             <h3>bill:</h3>
             <input type="number" jsf:value="#{paybillBean.amount}"/>
             <input type="submit" value="Submit" jsf:action="paid"/>
-        </h:form>
+        </form>
     </h:body>
 11.2 Create paid.xhtml like this:
     </h:head>
@@ -252,16 +252,16 @@ public class NoCacheWebFilter implements Filter {
 17. [Save], [Clean and Build], right click paybill.xhtml, [Run File], [Pay bill], enter 100, [Submit], now click the browser's [Go back] button, you got a [Confirm Form Resubmission] window, after read it, you click [Reload] button, you got another [Confirm Form Resubmission], and you [Continue], you end up the paid.xhtml page, not notpaid.xhtml page. No way you can make a mistake to repay. Good, but it is scary to  go through the procedure that you do not understand why. The second category solution is to cheat cache by hacking into browser's history and insert a page for the [Go back] button to use. The solution is so tricky that I do not want to use it.
 18. I have a perfect solution for the browser's [Go back] and [Reload] buttons. Instead of a full post we do ajax post. After the ajax post we stay on the same page but hide the ajax post part. Because ajax is a partial update, so the browser never caches it. In this way we can solve both [Reload] and [Go back] problems of the browser. Open notpaid.xhtml, change it like this:
     <h:body>
-        <h:form>
-            <h:panelGroup rendered="#{!paybillBean.paid}">
+        <form jsf:id="form1">
+            <div jsf:rendered="#{!paybillBean.paid}">
                 <input type="number" jsf:value="#{paybillBean.amount}"/>
                 <input jsf:id="s1" type="submit" value="Submit">
                     <f:ajax execute="@form" render="@form"/>
                 </input>
-            </h:panelGroup>
-            <h:panelGroup rendered="#{paybillBean.paid}">
+            </div>
+            <div jsf:rendered="#{paybillBean.paid}">
                 <h3>You paid $#{paybillBean.totalAmount}, thanks.</h3>
                 <button jsf:outcome="paybill">Go back to home page</button>
-            </h:panelGroup>
-        </h:form>
+            </div>
+        </form>
     </h:body>
