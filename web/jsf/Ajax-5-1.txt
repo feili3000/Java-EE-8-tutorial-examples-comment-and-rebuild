@@ -39,39 +39,43 @@ public class AjaxBean {
     public void setName(String name) {
         System.out.println("setName...............................................");
         this.name = name;
-    }     
+    }   
 
-    public void ajaxAction() {       
+    public void ajaxAction() {     
         System.out.println("ajaxAction...............................................");
         name = name.toUpperCase();
     }
 }
 11. Edit index.xhtml, make the body like this:
+
         <hr/>
         Example 1: Simplest AJAX (without 'execute' and 'render')
         <hr/>
-        <h:form id="form1">           
-                <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>           
-                <input type="submit" jsf:id="submit" value="Send" action="#{ajaxBean.ajaxAction()}">
-                         <f:ajax/>
-                </input>
-         </h:form>
-11.1 [Save], [Clean and Build], [Run].
+        <form jsf:id="form1">
+            <input type="text" jsf:value="#{ajaxBean.name}"/>
+            <input type="submit" value="Send" jsf:action="#{ajaxBean.ajaxAction()}">
+                <f:ajax/>
+            </input>
+        </form>
+
+11.1 [Save], stop the server, [Clean and Build], [Run].
 11.2 What do you think this f:ajax will do? It will do: Missing event means default event which is onclick, missing execute means @this, execute this button click, therefore, the action function will be called. Note that because the <input type="text"... /> is not in the execute list, so it won't be submitted.  Missing render means @none. Now a question for you: With an empty f:ajax, will it make a normal HTTP post call or Javascript xmlhttprequest call or both in order to execute the action function? The answer is Javascript xmlhttprequest call only. In the call it tells the server like this:
 
     javax.faces.partial.execute: form1:submit.
     javax.faces.partial.ajax: true
 
 12. The second example, add the following to the index.xhtml, [Save], [Clean and Build], [Run].
+
         <hr/>
         AJAX with execute (without 'render')
         <hr/>
-        <h:form id="form2">
-             <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
-             <input type="submit" jsf:id="submit" value="Send" action="#{ajaxBean.ajaxAction()}">
-                 <f:ajax execute ="nameInputId"/>
-             </input>
-         </h:form>
+        <form jsf:id="form2">
+            <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
+            <input type="submit" value="Send" jsf:action="#{ajaxBean.ajaxAction()}">
+                <f:ajax execute ="nameInputId"/>
+            </input>
+        </form>
+
 Enter a value "abc" in the box, and click [Send]. Missing event means default event which is onclick, execute ="nameInputId" means submit input value, and @this, execute this button click, therefore, the action function will be called. Missing render means @none. The Javascript xmlhttprequest call includes such terms:
 
   form2:nameInputId: abc
@@ -79,16 +83,18 @@ Enter a value "abc" in the box, and click [Send]. Missing event means default ev
   javax.faces.partial.ajax: true
 
 13. The third example, add the following to the index.xhtml, [Save], [Clean and Build], [Run].
+
         <hr/>
         AJAX with 'execute' and 'render'
-       <hr/>
-        <h:form id="form3">
-             <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
-             <input type="submit" jsf:id="submit" value="Send" action="#{ajaxBean.ajaxAction()}">
-                 <f:ajax execute ="nameInputId" render="nameOutputId"/>
-             </input>
-             <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-         </h:form> 
+        <hr/>
+        <form jsf:id="form3">
+            <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
+            <input type="submit" value="Send" jsf:action="#{ajaxBean.ajaxAction()}">
+                <f:ajax execute ="nameInputId" render="nameOutputId"/>
+            </input>
+            <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
+        </form>       
+
 13.1 Enter the value "abc" in the box, and click [Send]. Missing event means default event which is onclick, execute ="nameInputId" means submit input value, and @this, execute this button click, therefore, the action function will be called. render="nameOutputId" means update <output>. The Javascript xmlhttprequest call includes such terms:
 
   form3:nameInputId: abc
@@ -106,17 +112,19 @@ Enter a value "abc" in the box, and click [Send]. Missing event means default ev
 </partial-response>
 and JSF ajax Javascript code will use this to update the element<output>.
 
-14. The third example, add the following to the index.xhtml, [Save], [Clean and Build], [Run].
+14. The fourth example, add the following to the index.xhtml, [Save], [Clean and Build], [Run].
+
         <hr/>
         AJAX with 'render @form'
-      <hr/>
-         <h:form id="form4">
-             <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
-             <input type="submit" jsf:id="submit" value="Send" action="#{ajaxBean.ajaxAction()}">
-                 <f:ajax execute ="@form" render="@form"/>
-             </input>
-             <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-         </h:form> 
+        <hr/>
+        <form jsf:id="form4">
+            <input type="text" jsf:value="#{ajaxBean.name}"/>
+            <input type="submit" value="Send" jsf:action="#{ajaxBean.ajaxAction()}">
+                <f:ajax execute ="@form" render="@form"/>
+            </input>
+            <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
+        </form>
+
 The Javascript xmlhttprequest call includes such terms:
 
   form4:nameInputId: abc
@@ -137,21 +145,23 @@ The Javascript xmlhttprequest call includes such terms:
         </update>
     </changes>
 </partial-response>
-the whole html for the form returned but you only need to update one tag. So remember! to execute @form is no problem but do not render @form except you really know what you are doing!
+the whole html for the form returned but you only need to update one tag. So xecute @form is no problem but avoid rendering @form unless you have to.
 
 15. The similar story for render @all, we have to make another page to show you about it because the current page is too crowded for this messy call. Right click [Web Pages], [New], [Others...], [JavaServer Faces], [JSF Page], [Next], name it "atall", [Finish]. make it like this:
 
-<h:body>
-    <output jsf:id="nameOutputId2">#{ajaxBean.name}</output>
-    AJAX with 'render @all'
-    <h:form id="form5">
-        <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
-        <input type="submit" jsf:id="submit" value="Send" action="#{ajaxBean.ajaxAction()}">
-             <f:ajax execute ="@form" render="@all"/>
-         </input>
-         <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-     </h:form> 
-</h:body>
+    <h:body>
+        <output jsf:id="nameOutputId2">#{ajaxBean.name}</output><br/>
+        AJAX with 'render @all'
+        <hr/>
+        <form jsf:id="form5">
+            <input type="text" jsf:value="#{ajaxBean.name}"/>
+            <input type="submit" value="Send" jsf:action="#{ajaxBean.ajaxAction()}">
+                <f:ajax execute ="@form" render="@all"/>
+            </input>
+            <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
+        </form>       
+    </h:body>
+
 you can see there is one element out of the form. If you want one button to update them all, you can do it by render @all.
 15.1. [Save], right click atall.xhtml, [Run File], it works, but let's look at the response details.
 
@@ -179,16 +189,18 @@ you can see there is one element out of the form. If you want one button to upda
 </partial-response>
 you can see the full page is returned. So remember! render @form is lazy and render @all is a pig! You can easily achieve the goal by render="nameOutputId2 form5:nameOutputId".
 16. JSF ajax can hook up Javascript event listener function. Go back to the index.xhtml, Add the following to index.xhtml.
+
         <hr/>
         AJAX with event and error listeners
-       <hr/>
-        <h:form id="form6">
-             <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
-             <input type="submit" jsf:id="submit" value="Send" action="#{ajaxBean.ajaxAction()}">
-                 <f:ajax execute ="nameInputId" render="nameOutputId"  onevent ="onevent" />
-             </input>
-             <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-         </h:form> 
+        <hr/>
+        <form jsf:id="form6">
+            <input type="text" jsf:id="nameInputId" value="#{ajaxBean.name}"/>
+            <input type="submit" value="Send" jsf:action="#{ajaxBean.ajaxAction()}">
+                <f:ajax execute ="nameInputId" render="nameOutputId"  onevent ="onevent" />
+            </input>
+            <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
+        </form> 
+
 and add the Javascript functions to the header. Note that I dump the information to [Output] - [GlassFish Server 5.1.0] window.
 <script type="text/javascript">
     function onevent(event) {
@@ -201,6 +213,7 @@ and add the Javascript functions to the header. Note that I dump the information
         }
     }
 </script>
+
 17. How to use JSF ajax in a real application? The previous example of htm5 is a good example for JSF ajax.  It is a ticket booking application. Before people can really click a button to book a ticket, they need to know the total cost that is related to the ticket number and unit price. This is a typical partial submit and partial update JSF ajax case. Let's load it back to have a look.
 17.1 Expends +[Java EE Tutorial Examples], +[Modules], +[Web], +[jsf], open reservation project. Copy reservation.xhtml to ajax_c project. Copy ReservationBean.java to ajax_c view package. Open reservation.xhtml from ajax_c project. Move stylesheet to the head part like this:
 <h:outputStylesheet name="css/stylesheet.css"/>.
