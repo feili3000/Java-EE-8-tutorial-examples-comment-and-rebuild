@@ -1,15 +1,15 @@
 1. Let's go to the next example, which is reservation. In the project panel, Expend +[Java EE Tutorial],  +[Modules], +[web], +[jsf], right click [ reservation] project, choose [Open Project].
-2. Open menu [File], [New Project...], select [Java with Maven] and [Web Application], click [Next], make Project name: reservation_c, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish].
-3. If the project name is not reservation_c, right click on it, and choose Rename... Make the Display name as reservation_c. Click [OK ]
+2. Open menu [File], [New Project...], select [Java with Maven] and [Web Application], click [Next], make Project name: Html5-4-1-1, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish].
+3. If the project name is not Html5-4-1-1, right click on it, and choose Rename... Make the Display name as Html5-4-1-1. Click [OK ]
 4. If you find beans.xml under Web Pages\WEB-INF, delete it. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
-5. Right click on project reservation_c, and choose Properties.
+5. Right click on project Html5-4-1-1, and choose Properties.
 5.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
 5.2 Click Frameworks in the left panel, click the [Add... ] button in the right panel. Choose [JavaServer Faces ] from the list.
 5.3 Click Compile in the left panel, choose [JDK 1.8 ] as Java Platform:.
 5.4 Click Run in the left panel, confirm [GlassFish 5.1.0 ] is the Server, and [Java EE 8 Web ] is the Java EE Version. Click the [OK ] button to close the properties window.
 6. Double click web.xml under WebPages - ] WEB-INF, change /faces/* to *.xhtml, and faces/index.xhtml to index.xhtml. This will make the request call url simpler. Also change 30 minutes to 300 for the session timeout, so the page will stay there long enough for us to talk about it in detail.
-7. Copy reservation project to reservation_c.
-7.1 delete all web pages from reservation_c, copy resources folder, reservation.xhtml and confirmation.xhtml from reservation Web Pages to  reservation_c  Web Pages. copy javaeetutorial.reservation folder from Source Packages of reservation to reservation_c.
+7. Copy reservation project to Html5-4-1-1.
+7.1 delete all web pages from Html5-4-1-1, copy resources folder, reservation.xhtml and confirmation.xhtml from reservation Web Pages to  Html5-4-1-1  Web Pages. copy javaeetutorial.reservation folder from Source Packages of reservation to Html5-4-1-1.
 7.2 Open web.xml again and change the welcome page to reservation.xhtml.
 8. Open reservation.xhtml. Move line <h:outputStylesheet name="css/stylesheet.css" target="head"/ > from <h:body> to <h:head>. Delete target="head".
 9. Do the same thing for confirmation.xhtml.
@@ -55,7 +55,7 @@ C. enter bbb@bbb in the email field
 but forgot to match it in the email again field, fill the name and date fields, click [Make Reservation], the error escaped.
 17. The javascript function stays in the wrong place and calls at the wrong time. Let's fix the bug. Delete
 oninput="check(this)"
-from input "emailAgain" field, and add 
+from input "emailAgain" field, and add
 onclick="check();"
 to the h:commandButton. change the function as:
 function check() {

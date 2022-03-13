@@ -1,8 +1,8 @@
 1. Java EE 8 Tutorial has a ajax example "ajaxguessnumber", but it is too simple. So we create our own example.
-2. Open menu [File], [New Project...], Select [Java with Maven] and [Web Application]. Click [Next]. Make Project name:  ajax_c, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish]
-3. If the project name is not  ajax_c, right click on it, and choose Rename... Make the Display name as  ajax_c. Click <OK>
+2. Open menu [File], [New Project...], Select [Java with Maven] and [Web Application]. Click [Next]. Make Project name:  Ajax-5-1-1, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish]
+3. If the project name is not  Ajax-5-1-1, right click on it, and choose Rename... Make the Display name as  Ajax-5-1-1. Click <OK>
 4. If you find beans.xml under Web Pages\WEB-INF, delete it. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
-5. Right click on project  ajax_c, and choose Properties.
+5. Right click on project  Ajax-5-1-1, and choose Properties.
 5.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
 5.2 Click Frameworks in the left panel, click the [Add...] button in the right panel. Choose [JavaServer Faces] from the list.
 5.3 Click Compile in the left panel, choose JDK 1.8 as Java Platform:.
@@ -39,9 +39,9 @@ public class AjaxBean {
     public void setName(String name) {
         System.out.println("setName...............................................");
         this.name = name;
-    }   
+    }
 
-    public void ajaxAction() {     
+    public void ajaxAction() { 
         System.out.println("ajaxAction...............................................");
         name = name.toUpperCase();
     }
@@ -93,7 +93,7 @@ Enter a value "abc" in the box, and click [Send]. Missing event means default ev
                 <f:ajax execute ="nameInputId" render="nameOutputId"/>
             </input>
             <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-        </form>       
+        </form>   
 
 13.1 Enter the value "abc" in the box, and click [Send]. Missing event means default event which is onclick, execute ="nameInputId" means submit input value, and @this, execute this button click, therefore, the action function will be called. render="nameOutputId" means update <output>. The Javascript xmlhttprequest call includes such terms:
 
@@ -137,7 +137,7 @@ The Javascript xmlhttprequest call includes such terms:
     <changes>
         <update id="form4">
 
-<form id="form4" name="form4" method="post" action="/ajax_c/index.xhtml" enctype="application/x-www-form-urlencoded">
+<form id="form4" name="form4" method="post" action="/Ajax-5-1-1/index.xhtml" enctype="application/x-www-form-urlencoded">
 <input type="hidden" name="form4" value="form4" />
  <input id="form4:nameInputId" name="form4:nameInputId" type="text" value="ABC" /><input id="form4:submit"                           name="form4:submit" onclick="mojarra.ab(this,event,'action','@form','@form');return false" type="submit" value="Send" /><output        id="form4:nameOutputId">ABC</output>
 </form>
@@ -159,7 +159,7 @@ the whole html for the form returned but you only need to update one tag. So xec
                 <f:ajax execute ="@form" render="@all"/>
             </input>
             <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-        </form>       
+        </form>   
     </h:body>
 
 you can see there is one element out of the form. If you want one button to update them all, you can do it by render @all.
@@ -178,7 +178,7 @@ you can see there is one element out of the form. If you want one button to upda
 <output id="nameOutputId2">ABC</output><br />
  AJAX with 'render @form'
 <hr />
-<form id="form5" name="form5" method="post" action="/ajax_c/atall.xhtml" enctype="application/x-www-form-urlencoded">
+<form id="form5" name="form5" method="post" action="/Ajax-5-1-1/atall.xhtml" enctype="application/x-www-form-urlencoded">
 <input type="hidden" name="form5" value="form5" />
 <input id="form5:nameInputId" name="form5:nameInputId" type="text" value="ABC" /><input id="form5:submit" name="form5:submit" onclick="mojarra.ab(this,event,'action','@form','@all');return false" type="submit" value="Send" /><output id="form5:nameOutputId">ABC</output>
 </form>
@@ -199,7 +199,7 @@ you can see the full page is returned. So remember! render @form is lazy and ren
                 <f:ajax execute ="nameInputId" render="nameOutputId"  onevent ="onevent" />
             </input>
             <output jsf:id="nameOutputId">#{ajaxBean.name}</output>
-        </form> 
+        </form>
 
 and add the Javascript functions to the header. Note that I dump the information to [Output] - [GlassFish Server 5.1.0] window.
 <script type="text/javascript">
@@ -215,6 +215,6 @@ and add the Javascript functions to the header. Note that I dump the information
 </script>
 
 17. How to use JSF ajax in a real application? The previous example of htm5 is a good example for JSF ajax.  It is a ticket booking application. Before people can really click a button to book a ticket, they need to know the total cost that is related to the ticket number and unit price. This is a typical partial submit and partial update JSF ajax case. Let's load it back to have a look.
-17.1 Expends +[Java EE Tutorial Examples], +[Modules], +[Web], +[jsf], open reservation project. Copy reservation.xhtml to ajax_c project. Copy ReservationBean.java to ajax_c view package. Open reservation.xhtml from ajax_c project. Move stylesheet to the head part like this:
+17.1 Expends +[Java EE Tutorial Examples], +[Modules], +[Web], +[jsf], open reservation project. Copy reservation.xhtml to Ajax-5-1-1 project. Copy ReservationBean.java to Ajax-5-1-1 view package. Open reservation.xhtml from Ajax-5-1-1 project. Move stylesheet to the head part like this:
 <h:outputStylesheet name="css/stylesheet.css"/>.
 18.[Save], [Clean and Build], right click reserversion.xhtml, [Run File]. Change the number of tickets, see total price change; change ticket price, see total price change. The JSF ajax idea is good, but it has some implementation problems. Open ReservationBean.java, change the scope to @RequestScoped. [Save], [Clean and Build], and [Run File]. Play on the ticket number and ticket price again, it is not good any more. So The JSF ajax depends on the bean's long life. Open reserversion.xhtml, add execute ="price" to the tickets f:ajax, add execute ="tickets" to the tickets f:ajax. The change we made here is to submit both the tickets and price for each ajax call, so it won't depend on a long living bean any more. [Save], [Clean and Build], right click reserversion.xhtml, [Run File]. Remember, submit a full execute list for the spatial computing need.

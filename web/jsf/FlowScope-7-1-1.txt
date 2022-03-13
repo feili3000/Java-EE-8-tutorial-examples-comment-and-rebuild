@@ -1,22 +1,22 @@
 1. Let's go to the next example, which is checkout-module. In the project panel, Expend +[Java EE Tutorial], +[Modules], +[web], +[jsf], right click [checkout-module] project,  choose [Open Project ].
-2. Open menu File - ] New Project... Select Java with Maven and Web Application. Click [Next ]. Make Project name: checkout-module_c, and Project Location: C:\Programming\javaee8\myexamples\web\jsf, click [Next ]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish ]
-3. If the project name is not checkout-module_c, right click on it, and choose Rename... Make the Display name as checkout-module_c. Click [OK ]
+2. Open menu File - ] New Project... Select Java with Maven and Web Application. Click [Next ]. Make Project name: FlowScope-7-1-1, and Project Location: C:\Programming\javaee8\myexamples\web\jsf, click [Next ]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish ]
+3. If the project name is not FlowScope-7-1-1, right click on it, and choose Rename... Make the Display name as FlowScope-7-1-1. Click [OK ]
 4. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
-5. Right click on project checkout-module_c, and choose Properties.
+5. Right click on project FlowScope-7-1-1, and choose Properties.
 5.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
 5.2 Click Frameworks in the left panel, click the [Add... ] button in the right panel. Choose [JavaServer Faces ] from the list.
 5.3 Click Compile in the left panel, choose [JDK 1.8 ] as Java Platform:.
 5.4 Click Run in the left panel, confirm [GlassFish 5.1.0 ] is the Server, and [Java EE 8 Web ] is the Java EE Version. Click the [OK ] button to close the properties window.
-9. Copy checkout-module project to checkout-module_c.
-9.1 Delete all pages from WebPages of checkout-module_c project.
-9.2 Copy all pages including the resources folder from Web Pages of  checkout-module project to checkout-module_c.
-9.3 Copy all the Java source code from Source Packages of checkout-module project to checkout-module_c.
+9. Copy checkout-module project to FlowScope-7-1-1.
+9.1 Delete all pages from WebPages of FlowScope-7-1-1 project.
+9.2 Copy all pages including the resources folder from Web Pages of  checkout-module project to FlowScope-7-1-1.
+9.3 Copy all the Java source code from Source Packages of checkout-module project to FlowScope-7-1-1.
 9.4 copy
 [context-param ]
         [param-name ]javax.faces.CLIENT_WINDOW_MODE [/param-name ]
         [param-value ]url [/param-value ]
 [/context-param ]
-from web.xml under Web Pages/WEB-INF of checkout-module to checkout-module_c. Change url-pattern to *.xhtml, Change welcome-file to index.xhtml
+from web.xml under Web Pages/WEB-INF of checkout-module to FlowScope-7-1-1. Change url-pattern to *.xhtml, Change welcome-file to index.xhtml
 10. This example is about Flow scope. We know request scope, it survives only  for one request. We know the session scope, it keeps running for the whole user session. People think request scope is too short and session scope is too long in many cases, they try to think some scope is in the between. The flow scope is one of them, and major one of them. The flow scope organizes pages into different folders. Inside of each folder, all pages share one flow scope bean, the different folder is a different flow scope. You most likely have other pages that do not belong to any flow scope, feel free to organize them in your way. In this example, we have 2 flow scopes: joinFlow and checkoutFlow and 2 pages: index.xhtml and exithome.xhtml. People used to provide 2 non flow scope pages, one for enter flows and another for exit flow scope, but this is not required. You can have as many non flow scope pages as you want, but 0 is not good practice. Once your application does not use any flow scope any more, you can put them on a non flow scope page, so the server can destroy the flow scope bean to reduce the server load. The flow scope bean size is big in general because they serve multiple pages.
 11. Each flow scope is defined by a configuration, the configuration can be done by a xml file or a Java code. Expand +joinFlow, you see a file has the same name as the folder plus"-flow". This is its configuration file. Open it, you can see it defines one flow-return and one flow-call. The flow-return page is exithome.xhtml and flow-call is going to checkout flow.  Expend +checkoutFlow you will not find the configuration file, so somewhere in Java code there will be a tag @Produces @FlowDefinition, it tells the server this is your configuration for the flow with a id="checkoutFlow". The server will keep the returned Flow object, when you do return or call, the server will check this object to see how to do that for you. Open CheckoutFlow.java, it is there. The checkoutFlow defined one flow-start, one flow-return and one flow-call.
 12. I want to add some code to monitor the life cycle of flow scope beans.
@@ -197,7 +197,7 @@ Click [Check Out ], fill all * fields, [Continue ], [Continue ], fill all * fiel
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
-      
+
     <f:metadata>
         <f:event type="preRenderView" listener="#{checkoutBean.redirect()}"/>
     </f:metadata>
@@ -267,7 +267,7 @@ Click [Check Out ], fill all * fields, [Continue ], [Continue ], fill all * fiel
 </html>
 29.4 This is the joinFlow2.xhtml:
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
@@ -280,13 +280,13 @@ Click [Check Out ], fill all * fields, [Continue ], [Continue ], fill all * fiel
     </h:head>
     <h:body style="background-color: lightgoldenrodyellow">
         <form jsf:id="form1">
-            <h:graphicImage url="/resources/images/duke.books.gif" 
+            <h:graphicImage url="/resources/images/duke.books.gif"
                             alt="Duke carrying books"/>
             <h2>Join Flow Page Two</h2>
-            <p>Thank you, #{flowScope.param1Value}! 
+            <p>Thank you, #{flowScope.param1Value}!
                 Reading the parameter passed from the Checkout flow.</p>
             <p>To call the checkout flow, click Check Out.</p>
-            <p>To go to the site's home page or to return to the calling flow, 
+            <p>To go to the site's home page or to return to the calling flow,
                 click Home.</p>
             <p>
                 <input type="submit" value="Check Out" jsf:action="#{joinFlowBean.callcheckoutFlow()}"/>
@@ -295,11 +295,11 @@ Click [Check Out ], fill all * fields, [Continue ], [Continue ], fill all * fiel
                 <input type="submit" value="Exit Flow" jsf:action="returnFromJoinFlow"/>
             </p>
             <p/><p/>
-            
+
             <p>
                 <input type="submit" value="Check Out 2" jsf:action="#{joinFlowBean.callcheckoutFlow2()}"/>
             </p>
-            
+
         </form>
     </h:body>
 </html>

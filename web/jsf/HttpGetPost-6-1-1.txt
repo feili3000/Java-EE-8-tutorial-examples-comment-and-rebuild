@@ -1,9 +1,9 @@
 1. The next example is the bookmarks. It is a small example talking about bookmarkable URLs when you make a HTTP call. We want to go more broadly about the topic. Talk about how to make JSF HTTP call and control the refresh and go back button of the browser.
-2. Let's make a new example, let's call it jsf-http-request.
-3. Open menu [File], [New Project...], Select [Java with Maven] and [Web Application]. Click [Next ]. Make Project name: jsf-http-request, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next ]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish ].
-4. If the project name is not jsf-http-request, right click on it, and choose [Rename...] Make the Display name as jsf-http-request. Click [OK ]
+2. Let's make a new example, let's call it HttpGetPost-6-1-1.
+3. Open menu [File], [New Project...], Select [Java with Maven] and [Web Application]. Click [Next ]. Make Project name: HttpGetPost-6-1-1, and Project Location: C:\Programming\javaee8\tutorial\myexamples\web\jsf, click [Next ]. Make sure Server: is GlassFish Server 5.1.0 and JavaEE Version: is Java EE 8 Web. Click [Finish ].
+4. If the project name is not HttpGetPost-6-1-1, right click on it, and choose [Rename...] Make the Display name as HttpGetPost-6-1-1. Click [OK ]
 5. If you find beans.xml under Web Pages\WEB-INF, delete it. If you find anything under Source Packages, delete them all. Delete anything under Other Sources/src/main/resources.
-6. Right click on project jsf-http-request, and choose Properties.
+6. Right click on project HttpGetPost-6-1-1, and choose Properties.
 6.1 Click Sources in the left panel, confirm 1.8 is Source/Binary format in the right panel.
 6.2 Click Frameworks in the left panel, click the [Add... ] button in the right panel. Choose [JavaServer Faces ] from the list.
 6.3 Click Compile in the left panel, choose [JDK 1.8 ] as Java Platform:.

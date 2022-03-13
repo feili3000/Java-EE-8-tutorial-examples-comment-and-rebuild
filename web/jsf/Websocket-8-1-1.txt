@@ -1,7 +1,7 @@
 1. In the Java EE 8 tutorial examples, there are 2 examples about Websocket, but there are old JSF 2.2 examples. The  Java EE 8 tutorial document does describe JSF 2.3 Websocket, but no example is provided.
 2. Let's make one.
-2.1 Open menu [File], [New Project], select [Java with Maven] and [Web Application], [Next ], Make the project name: websocket, [Next ], select [Java EE 8 Web], make sure Server is GlassFish Server 5.1.0, [Finish]
-2.2 Change the project name if it is not [websocket].
+2.1 Open menu [File], [New Project], select [Java with Maven] and [Web Application], [Next ], Make the project name: Websocket-8-1-1, [Next ], select [Java EE 8 Web], make sure Server is GlassFish Server 5.1.0, [Finish]
+2.2 Change the project name if it is not [Websocket-8-1-1].
 2.3 Right click the project and choose [Properties], click [Sources], make sure [Source/Binary Format] is 1.8. click Frameworks, add [JavaServer Faces], click [Compile], Java Platform is JDK 1.8, click [Run], Server is GlassFish 5.1.0 and Java EE Version is Java EE 8 Web. [OK]
 2.4 Open pom.xml, add:
 <scope>provided</scope>
@@ -35,16 +35,16 @@ the <scope>provided</scope> tells Netbeans, use Netbeans' JSF 2.3.9 library to c
             function  onOpen(event) {
                 //alert("Client try to call the server");
             }
-        </script>      
+        </script> 
     </h:head>
     <h:body>
         <h3>JSF 2.3 WebSocket</h3>
         <h4>Server Push: Deliver everything to your door.</h4>
         <form jsf:id="form1">
-            <f:websocket id="c1" channel="helloChannel" connected="false"
+            <f:Websocket-8-1-1 id="c1" channel="helloChannel" connected="false"
                          onmessage="onMessage" onopen="onOpen" scope="session">
                 <f:ajax event="newMsg" render="price"/>
-            </f:websocket>
+            </f:Websocket-8-1-1>
             <label for="price">Price: </label>
             <output jsf:id="price" />
             <p/>
@@ -63,7 +63,7 @@ the <scope>provided</scope> tells Netbeans, use Netbeans' JSF 2.3.9 library to c
 </html>
 4. A little bit of explanation.
 4.1
-            <f:websocket id="c1" channel="helloChannel" connected="false"
+            <f:Websocket-8-1-1 id="c1" channel="helloChannel" connected="false"
                          onmessage="onMessage" onopen="onOpen" scope="session"/>
 open a web socket, the id isbe used in Javascript. The channel is used in the push context in the Java code. The socket initial status is closed. There are 2 Javascript functions hooked up. One for receiving messages and another for the open connection. The scope of the session means each session will get its own web socket.
 4.2 There are 2 buttons:
@@ -186,12 +186,12 @@ It injects the session bean, and gets the push context from the bean, and provid
         <hr/>
         <h4>Server Push: Push a notification message only, you pick up everything in store.</h4>
         <form jsf:id="form2">
-            <f:websocket id="c2" channel="pickupInStoreChannel" connected="false" scope="session">
+            <f:Websocket-8-1-1 id="c2" channel="pickupInStoreChannel" connected="false" scope="session">
                 <f:ajax event="newArrival" render="orderItemList"/>
-            </f:websocket>            
+            </f:Websocket-8-1-1>       
             <h:selectOneListbox id="orderItemList" size="10" style="width:150px;">
                 <f:selectItems value="#{pickupBean.orderItemList}"/>
-            </h:selectOneListbox>                                    
+            </h:selectOneListbox>                               
             <p/>
             <input type="submit" jsf:onclick="jsf.push.open('form2:c2');" jsf:action="#{pickupBean.start()}" value="Start push">
                 <f:ajax/>
@@ -200,9 +200,9 @@ It injects the session bean, and gets the push context from the bean, and provid
                 <f:ajax/>
             </input>
             <p/>
-            <f:websocket id="c2" channel="pickupInStoreChannel" connected="false" scope="session">
+            <f:Websocket-8-1-1 id="c2" channel="pickupInStoreChannel" connected="false" scope="session">
                 <f:ajax event="newArrival" render="orderItemList"/>
-            </f:websocket>
+            </f:Websocket-8-1-1>
         </form>
 This second web socket is a little different from the first one. It is listening to the server message, when it receives a message "newArrival", it sends an ajax post call to get the new data which is the orderItemList in the pickupBean.
 9. Add another push context to the PushSessionBean.java like this:
@@ -252,11 +252,11 @@ public class PickupBean implements Serializable {
         typeList.add("Food");
         typeList.add("iPhone");
         typeList.add("Cloths");
-        
+
     }
 
     private ScheduledExecutorService scheduler = null;
-    
+
     String notification = "newArrival";
     List<String> orderItemList;
     volatile int j = 0;
@@ -293,7 +293,7 @@ public class PickupBean implements Serializable {
             public void run() {
                 try {
                     if (pickupInStoreChannel != null) {
-                        
+
                         while (true) {
                             if (i < 4) {
                                 i++;
@@ -314,7 +314,7 @@ public class PickupBean implements Serializable {
                             }
                             pickupInStoreChannel.send(notification);
                         }
-                        
+
                     } else {
                         System.out.println("helloChannel null............................................................");
                     }
